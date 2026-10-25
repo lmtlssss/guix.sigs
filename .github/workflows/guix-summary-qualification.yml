@@ -1,0 +1,20 @@
+name: Guix summary parser qualification (isolated)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  git-blobs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ci-trusted-guix-summary-20261024
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Compile actual parser source and run six Git-object regressions
+        run: |
+          set -euo pipefail
+          python3 -m py_compile contrib/shasum-summary/main.py contrib/shasum-summary/test_pinned_blob.py
+          python3 contrib/shasum-summary/test_pinned_blob.py
